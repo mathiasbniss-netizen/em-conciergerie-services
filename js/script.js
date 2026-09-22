@@ -37,14 +37,25 @@ if (contactForm && formSuccess) {
   contactForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    formSuccess.classList.add('visible');
+    const formData = new FormData(contactForm);
 
-    contactForm.reset();
-
-    formSuccess.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString()
+    })
+      .then(() => {
+        formSuccess.classList.add('visible');
+        contactForm.reset();
+        formSuccess.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      })
+      .catch((error) => {
+        console.error('Erreur lors de l\'envoi du formulaire :', error);
+        alert('Une erreur est survenue. Merci de réessayer ou de nous contacter directement par email.');
+      });
   });
 }
 
